@@ -108,7 +108,28 @@ If you do not need these packages, set -DOPENBLAS=0 (default);
 otherwise, set -DOPENBLAS=1.
 The default version of OpenBLAS is not very stable for cross platforms, which often results in compiling errors. 
 OpenBLAS is integrated as a submodule which fetch source code from remote repository. 
-If you already have OpenBLAS in the directory, simply run "git submodule update" to fetch the latest version in the submodule directory. 
+If you already have OpenBLAS in the directory, simply run "git submodule update" to fetch the latest version in the submodule directory.
+
+# Extracting Parsers Only
+
+If you only need the parser libraries without the rest of Limbo, a helper
+script is provided. Run
+
+```
+tools/extract_parsers/extract_parsers.sh /path/to/standalone
+```
+
+This copies all parser sources and the minimal headers into the given
+directory and writes a simple `CMakeLists.txt` to build them. Afterwards
+compile the standalone copy with
+
+```
+mkdir build && cd build
+cmake ..
+make
+```
+
+Flex, Bison and Boost must be installed on your system.
 
 # FAQ 
 
