@@ -88,6 +88,18 @@ Some components depend on external libraries, such as
 Users need to make sure they are properly installed and the corresponding settings are configured. 
 
 ## 1. Default installation
+* Configure the environment first
+~~~~~~~~~~~~~~~~
+apt-get update -y
+apt-get install -y \
+    cmake \
+    build-essential \
+    bison \
+    flex \
+    zlib1g-dev \
+    libboost-graph-dev \
+    libboost-regex-dev
+~~~~~~~~~~~~~~~~
 
 * In the directory of limbo library, run 
 ~~~~~~~~~~~~~~~~
@@ -97,8 +109,32 @@ cmake .. -DCMAKE_INSTALL_PREFIX=absolute/path/to/your/installation
 make
 make install 
 ~~~~~~~~~~~~~~~~
+Suggest use the command below to avoid the problem in Q&A 
+~~~~~~~~~~~~~~~~
+mkdir build
+cd build
+cmake .. \
+  -DCMAKE_CXX_FLAGS="-std=c++11 -D_GLIBCXX_USE_CXX11_ABI=1" \
+  -DCMAKE_INSTALL_PREFIX=$LIMBO_DIR
+make -j$(nproc)
+make install
+~~~~~~~~~~~~~~~~
 
 After installation, it is strongly recommended to export LIMBO_DIR to the path where Limbo library is installed as an environment variable. 
+
+~~~~~~~~~~~~~~~~
+export LIMBO_DIR=/app/Limbo
+~~~~~~~~~~~~~~~~
+you may change the path, that depends on your project path
+
+*Run the code
+There are many examples in test， Here is the example of parsering def file
+Please read the readme file under the doc/parsers folder [def.md](https://github.com/limbo018/Limbo/blob/master/docs/parsers/Def.md)
+~~~~~~~~~~~~~~~~
+g++ -o test_adapt test_adapt.cpp -I $LIMBO_DIR/include -L $LIMBO_DIR/lib -ldefparseradapt
+./test_adapt benchmarks/simple.def
+~~~~~~~~~~~~~~~~
+
 
 ## 2. Customize OPENBLAS options 
 
@@ -150,7 +186,20 @@ The compilation flag _GLIBCXX_USE_CXX11_ABI is used to control whether gcc uses 
 If Limbo is compiled with C++11 ABI, while target program is compiled with old ABI, then the linkage error appears, vice versa. 
 Therefore, it is necessary to make sure the same STL ABI is used for compiling Limbo and target program. 
 In other words, set consistent _GLIBCXX_USE_CXX11_ABI values. 
-A safe way is to leave it to the default value. 
+A safe way is to leave it to the default value.
+
+rebuild the lib. Don't forget delete the build folder and create a new folder.
+
+```bash
+cd /app/Limbo/build
+cmake .. \
+  -DCMAKE_CXX_FLAGS="-std=c++11 -D_GLIBCXX_USE_CXX11_ABI=1" \
+  -DCMAKE_INSTALL_PREFIX=$LIMBO_DIR
+make -j$(nproc)
+make install
+
+```
+
 
 # Copyright 
 The software is released under MIT license except third party packages. Please see the LICENSE file for details. 
